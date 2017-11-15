@@ -1,7 +1,6 @@
 package is.hi.byrjun.controller;
 
-import is.hi.byrjun.model.Dagur;
-import is.hi.byrjun.repository.DagurRepository;
+import is.hi.byrjun.model.Kennari;
 import is.hi.byrjun.services.DaginnService;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +27,7 @@ public class DaginnController {
     // Tenging yfir í þjónustu klasa fyrir góðan daginn forritið 
     @Autowired
     DaginnService daginnService;
-
-    // Tenging yfir í safn af kennurum 
-    @Autowired
-    DagurRepository dagurRep;
+   
 
     /**
      * Býður sama notandanum góðan daginn
@@ -60,35 +56,72 @@ public class DaginnController {
      * réttu sniði annars birtir það villumeldingu
      *
      * @param nafn Nafn á notanda
+     * @param heimilisfang Heimilisfang notanda
      * @param model Módel með attributum
      * @return vefsíðu sem birtir góðan daginn nafn 
      */
     @RequestMapping(value = "/hver", method = RequestMethod.POST)
-    public String hver(@RequestParam(value = "nafn", required = false) 
-            String nafn, ModelMap model) {
+    public String hver(@RequestParam(value = "nafn", required = false) String nafn,
+            @RequestParam(value = "heimilisfang", required = false) String heimilisfang,
+            ModelMap model) {
 
         if (daginnService.erNafnRett(nafn)) {
-            Dagur k = new Dagur(nafn, 50, 50, 50);
-            model.addAttribute("dagur", k);
-            dagurRep.add(k);
-            return "demo/synaDagur";
+            Kennari k = new Kennari(nafn, heimilisfang);
+            model.addAttribute("kennari", k);
+            daginnService.addKennari(k);
+            return "demo/synaKennari";
         } else {
             return "demo/rangtNafn";
         }
     }
 
+    
+    /**
+     * Tekur við nafni frá notanda og birtir Góðan daginn nafn ef nafnið er á
+     * réttu sniði annars birtir það villumeldingu
+     *
+     * @param nafn Nafn á notanda
+     * @param heimilisfang Heimilisfang notanda
+     * @param model Módel með attributum
+     * @return vefsíðu sem birtir góðan daginn nafn 
+     */
+    @RequestMapping(value = "/hverKennari", method = RequestMethod.POST)
+    public String hverKennari(@ModelAttribute("kennari") Kennari k,
+            ModelMap model) {
+
+        if (daginnService.erNafnRett(k.getNafn())) {
+            model.addAttribute("kennari", k);
+            daginnService.addKennari(k);
+            return "demo/synaKennari";
+        } else {
+            return "demo/rangtNafn";
+        }
+    }
     /**
      * Birtir lista af kennurum
      *
      * @param model módel fyrir samskipti við viðmót
      * @return vefsíðu með lista af kennurum
      */
-    @RequestMapping(value = "/listiDaga", method = RequestMethod.GET)
-    public String listiDaga(Model model) {
-        ArrayList<Dagur> listi;
-        listi = (ArrayList<Dagur>) dagurRep.getAll();
-        model.addAttribute("dagar", listi);
-        return "demo/allirDagar";
+    @RequestMapping(value = "/listiKennara", method = RequestMethod.GET)
+    public String listiKennara(Model model) {
+        ArrayList<Kennari> listi;
+        listi = (ArrayList<Kennari>) daginnService.allirKennarar();
+        model.addAttribute("kennarar", listi);
+        return "demo/allirKennarar";
     }
 
+     /**
+     * Birtir lista af kennurum með nafn lengra en 3 stafir
+     *
+     * @param model módel fyrir samskipti við viðmót
+     * @return vefsíðu með lista af kennurum
+     */
+    @RequestMapping(value = "/listiKennara3", method = RequestMethod.GET)
+    public String listiKennara3Nafn(Model model) {
+        ArrayList<Kennari> listi;
+        listi = (ArrayList<Kennari>) daginnService.finnaAlla3Stafi();
+        model.addAttribute("kennarar", listi);
+        return "demo/allirKennarar";
+    }
 }

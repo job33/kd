@@ -17,8 +17,12 @@
 
 package is.hi.byrjun.model;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 /**
  *
@@ -29,12 +33,22 @@ import org.springframework.context.annotation.Configuration;
  * 
  * Kennari klasi inniheldur nafn kennarans og heimilisfang
  */
-public class Dagur {
-    private String nafn;
-    private int protein;
-    private int carb;
-    private int fat;
+
+// Skilgreinum Entity og Table fyrir gagnagrunninn
+@Entity
+@Table (name="kennari")
+public class Kennari {
     
+    // Skilgrein id sem auðkenni (e. identity)  hlutarins 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String nafn;
+    private String heimilisfang;
+
+    // Smiður til að búa til tóman hlut. Hefur enga parametra
+    public Kennari() {
+    }
 
     public String getNafn() {
         return nafn;
@@ -44,41 +58,23 @@ public class Dagur {
         this.nafn = nafn;
     }
 
-    public int getProtein() {
-        return protein;
+    public String getHeimilisfang() {
+        return heimilisfang;
     }
 
-    public void setProtein(int protein) {
-        this.protein = protein;
-    }
-    
-    public int getCarb() {
-        return carb;
-    }
-
-    public void setCarb(int carb) {
-        this.carb = carb;
-    }
-    
-    public int getFat() {
-        return fat;
-    }
-
-    public void setFat(int fat) {
-        this.fat = fat;
+    public void setHeimilisfang(String heimilisfang) {
+        this.heimilisfang = heimilisfang;
     }
    
     
-    public Dagur (String n, int p, int c, int f) {
+    public Kennari (String n, String h) {
         nafn = n;
-        protein = p;
-        carb = c;
-        fat = f;
+        heimilisfang = h;
     }
     
     @Override
     public String toString() {
-        return String.format("<BR>" + "nafn: " + nafn + "<BR>" + "Prótein: " + protein + "<BR>" + "Carb: " + carb + "<BR>" + "Fat: " + fat);
+        return String.format("<BR>" + "nafn: "+nafn + "<BR>" +"heimilisfang: "+heimilisfang);
     }
     
 }

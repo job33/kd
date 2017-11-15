@@ -6,20 +6,20 @@
 <html lang="en">
 
 <head>
-    <title>Gï¿½ï¿½an daginn </title>
+    <title>Góðan daginn </title>
 </head>
 <body>
 
-<h1>Gï¿½ï¿½an daginn ${dagur.getNafn()}</h1>
-<h1>Allar upplï¿½singar ${dagur} </h> 
-<form method="get" action="/demo/listiDaga">
+<h1>Góðan daginn ${kennari.getNafn()}</h1>
+<h1>Allar upplýsingar ${kennari} </h> 
+<form method="get" action="/demo/listiKennara">
  <input type="submit" value="Allir"/>
 </form>
 
 <form method="get" action="/demo/spyrjaNotanda">
- <input type="submit" value="Nï¿½r dagur"/>
+ <input type="submit" value="Nýr kennari"/>
 </form>
 
 </body>
-<!-- method="POST" action="/demo/listiDaga" -->
+<!-- method="POST" action="/demo/listiKennara" -->
 </html>
